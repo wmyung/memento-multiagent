@@ -12,6 +12,8 @@
 
 Its main advantage is the browser control plane: a human can open one local web app, see the memory and skills of all connected agents, directly edit or quarantine bad entries, review stale context, and decide what is safe to keep, share, or export.
 
+You do **not** need a VM, server, Kubernetes cluster, or remote agent host. The default setup runs on one local machine: a local MEMENTO store, local agent adapters, and a local browser dashboard bound to `127.0.0.1`.
+
 It is built for the moment when a user stops using one assistant and starts operating a small agent fleet:
 
 - Codex works in the repo;
@@ -33,9 +35,29 @@ memento-multiagent web
 http://127.0.0.1:4173/
 ```
 
+## Works Without A VM
+
+The reference workflow can span VMs and persistent agents, but that is not required.
+
+Local-only mode is the default:
+
+```text
+Laptop or desktop
+  -> local MEMENTO SQLite/wiki store
+  -> local Codex / Claude / CLI agents
+  -> local browser dashboard at 127.0.0.1:4173
+```
+
+Use a VM only when you want persistent remote agents, always-on automation, or shared team infrastructure. For a personal multi-agent setup, one machine is enough.
+
 ## Keywords
 
 `multi-agent memory`, `agent memory system`, `shared memory for AI agents`, `Codex memory`, `Claude memory`, `Hermes agent memory`, `OpenClaude`, `AGENTS.md`, `CLAUDE.md`, `SOUL.md`, `SQLite FTS5`, `WikiLLM`, `agent skills`, `skill registry`, `memory cleanup`, `memory pollution`, `local-first AI`, `private agent memory`, `MEMENTO`.
+
+## Related Projects
+
+- **[wmyung/memento](https://github.com/wmyung/memento)** — the lightweight MEMENTO memory core: SQLite fact store, Git/Markdown wiki, keyword bridge, decisions, artifacts, and experiences.
+- **[wmyung/memento-multiagent](https://github.com/wmyung/memento-multiagent)** — this optional multi-agent layer: browser control plane, agent registry, skill visibility, cleanup queues, and privacy review.
 
 ## Why This Exists
 
