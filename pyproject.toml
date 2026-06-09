@@ -1,0 +1,29 @@
+[build-system]
+requires = []
+build-backend = "build_backend"
+backend-path = ["."]
+
+[project]
+name = "memento-multiagent"
+version = "0.1.0"
+description = "Local-first multi-agent memory and skill control plane for Codex, Claude, Hermes, and CLI/HTTP agents."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "MEMENTO Contributors" }]
+keywords = ["ai-agents", "memory", "memento", "codex", "claude", "hermes"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Framework :: AsyncIO",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = []
+
+[project.scripts]
+memento-multiagent = "memento_multiagent.cli:main"
