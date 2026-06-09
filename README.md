@@ -50,6 +50,81 @@ Laptop or desktop
 
 Use a VM only when you want persistent remote agents, always-on automation, or shared team infrastructure. For a personal multi-agent setup, one machine is enough.
 
+## Multi-Device Sharing
+
+Local-only mode is enough when all agents run on one machine. If agents run across several machines, they need a shared reference point.
+
+`memento-multiagent` should support four operating modes:
+
+| Mode | Use when | How it works | Tradeoff |
+|---|---|---|---|
+| **Local** | one laptop/desktop runs all agents | all memory stays in one local MEMENTO store | simplest and safest |
+| **Hub** | agents run on several machines and need shared live memory | one always-on machine hosts the shared MEMENTO store and web UI; clients connect over SSH, Tailscale, HTTP, or MCP | best live sharing, requires one reachable host |
+| **GitHub async sync** | you want portable, auditable, multi-machine sharing without running a server | wiki pages, sanitized decisions, skill metadata, and append-only memory logs sync through a private GitHub repo | great for history/review, not ideal for live SQLite writes |
+| **File-drive sync** | a team already lives in a shared drive | selected exports sync through a provider such as Google Drive | convenient for humans, more conflict-prone for agent writes |
+
+Recommended default:
+
+```text
+single machine     -> Local mode
+multiple machines  -> Hub mode over Tailscale/SSH
+portable history   -> GitHub async sync
+human file sharing -> Google Drive export only, not the primary memory backend
+```
+
+### GitHub Sync
+
+GitHub is a strong option for asynchronous sharing because it gives version history, pull requests, review, issues, releases, and access control.
+
+Best things to sync through GitHub:
+
+- Git/Markdown wiki pages;
+- sanitized decisions;
+- public or private skill metadata;
+- adapter specs;
+- docs and examples;
+- append-only memory event logs;
+- redacted export bundles.
+
+Things that should **not** be synced directly through GitHub by default:
+
+- raw SQLite databases;
+- OAuth files;
+- API keys or cookies;
+- local browser/session state;
+- unreviewed audit logs;
+- private hostnames or personal records.
+
+SQLite is excellent as a local fact store, but raw SQLite files are a poor multi-writer sync format. For GitHub sync, prefer append-only logs and import/export snapshots that pass through the redaction gate.
+
+```text
+Device A local SQLite
+  -> export reviewed append log
+  -> private GitHub repo
+  -> Device B imports reviewed events
+```
+
+### Google Drive
+
+Google Drive can be useful for human-facing exports, PDFs, docs, and shared review folders. It is less attractive as the core memory sync backend.
+
+Why it is not the default:
+
+- OAuth setup is heavier;
+- file locking and conflict behavior are harder to reason about;
+- agent writes can race across machines;
+- auditability is weaker than Git commits for text memory;
+- Drive is better for documents than append-only operational memory.
+
+Recommended role:
+
+```text
+Google Drive = optional export/review target
+GitHub       = optional async source-controlled sync
+Hub          = live shared memory
+Local        = safest default
+```
+
 ## Keywords
 
 `multi-agent memory`, `agent memory system`, `shared memory for AI agents`, `Codex memory`, `Claude memory`, `Hermes agent memory`, `OpenClaude`, `AGENTS.md`, `CLAUDE.md`, `SOUL.md`, `SQLite FTS5`, `WikiLLM`, `agent skills`, `skill registry`, `memory cleanup`, `memory pollution`, `local-first AI`, `private agent memory`, `MEMENTO`.
