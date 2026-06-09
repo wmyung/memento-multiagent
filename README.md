@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](./LICENSE)
 [![Dependencies](https://img.shields.io/badge/runtime-stdlib%20only-brightgreen)](#dependency-model)
 [![Privacy](https://img.shields.io/badge/default-local--first-black)](#security-model)
-[![Agents](https://img.shields.io/badge/agents-Codex%20%7C%20Claude%20%7C%20Hermes%20%7C%20OpenClaude-6f42c1)](#connect-agents)
+[![Agents](https://img.shields.io/badge/agents-Codex%20%7C%20Claude%20%7C%20Hermes%20%7C%20OpenClaw-6f42c1)](#connect-agents)
 
 `memento-multiagent` lets several AI agents share memory and skills without forcing them into one framework or cloud backend.
 
@@ -19,7 +19,7 @@ It is built for the moment when a user stops using one assistant and starts oper
 - Codex works in the repo;
 - Claude handles long reasoning and review;
 - Hermes runs persistent workflows;
-- OpenClaude-style or CLI agents handle local automation;
+- OpenClaw-style or CLI agents handle local automation;
 - each agent needs the same facts, decisions, skills, and safety rules.
 
 Install it, register agents, paste the generated instruction block into each agent's `AGENTS.md`, `CLAUDE.md`, or `SOUL.md`, and start running a shared agent memory system with a browser UI for human review and control.
@@ -214,7 +214,7 @@ Local        = safest default
 
 ## Keywords
 
-`multi-agent memory`, `agent memory system`, `shared memory for AI agents`, `Codex memory`, `Claude memory`, `Hermes agent memory`, `OpenClaude`, `AGENTS.md`, `CLAUDE.md`, `SOUL.md`, `SQLite FTS5`, `WikiLLM`, `agent skills`, `skill registry`, `memory cleanup`, `memory pollution`, `local-first AI`, `private agent memory`, `MEMENTO`.
+`multi-agent memory`, `agent memory system`, `shared memory for AI agents`, `Codex memory`, `Claude memory`, `Hermes agent memory`, `OpenClaw`, `AGENTS.md`, `CLAUDE.md`, `SOUL.md`, `SQLite FTS5`, `WikiLLM`, `agent skills`, `skill registry`, `memory cleanup`, `memory pollution`, `local-first AI`, `private agent memory`, `MEMENTO`.
 
 ## Related Projects
 
@@ -318,7 +318,7 @@ This is not "SQLite instead of WikiLLM." It is **SQLite for fast agent memory pl
 | Shared memory across agents | Agent registry plus common MEMENTO-backed commands |
 | Fast routine recall | SQLite/FTS first hop |
 | Durable knowledge | Git/Markdown wiki and WikiLLM-compatible workflow |
-| No framework lock-in | Adapters for Codex, Claude, Hermes, OpenClaude-style, generic CLI/HTTP |
+| No framework lock-in | Adapters for Codex, Claude, Hermes, OpenClaw-style, generic CLI/HTTP |
 | Low dependency footprint | Python stdlib runtime and custom no-dependency build backend |
 | Safe public sharing | Redaction and export gates before GitHub sync |
 | Memory cleanup | stale, duplicate, conflicting, private, orphaned, and agent-local review queues |
@@ -375,7 +375,7 @@ Built-in adapter targets:
 - `codex`
 - `claude`
 - `hermes`
-- `openclaude`
+- `openclaw`
 - `generic-cli`
 - `generic-http`
 - `mcp`
@@ -539,12 +539,12 @@ Next layers:
 - skill registry detail pages;
 - GitHub export preview;
 - optional Supabase managed hub backend;
-- richer adapter implementations for Codex, Claude, Hermes, OpenClaude-style agents, and MCP clients.
+- richer adapter implementations for Codex, Claude, Hermes, OpenClaw-style agents, and MCP clients.
 
 ## GitHub Topics
 
 Recommended repository topics:
 
 ```text
-ai-agents, agent-memory, multi-agent, memento, codex, claude, hermes, openclaude, sqlite, wikillm, supabase, local-first, agent-skills, memory-cleanup, privacy
+ai-agents, agent-memory, multi-agent, memento, codex, claude, hermes, openclaw, sqlite, wikillm, supabase, local-first, agent-skills, memory-cleanup, privacy
 ```
