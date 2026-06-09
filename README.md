@@ -95,13 +95,35 @@ Things that should **not** be synced directly through GitHub by default:
 - unreviewed audit logs;
 - private hostnames or personal records.
 
+GitHub sync does **not** replace SQLite. Each device should keep its own local SQLite store for fast recall. GitHub carries reviewed, text-based sync artifacts that are safe to diff, review, merge, and audit.
+
+Recommended serverless layout:
+
+```text
+memory.sqlite3          # local only, fast recall cache/fact store
+events/*.jsonl          # GitHub sync, append-only memory events
+wiki/*.md               # GitHub sync, durable knowledge
+decisions/*.jsonl       # GitHub sync, reviewed decisions
+skills/*.json           # GitHub sync, skill metadata
+exports/redacted/*.json # GitHub sync, approved export bundles
+```
+
 SQLite is excellent as a local fact store, but raw SQLite files are a poor multi-writer sync format. For GitHub sync, prefer append-only logs and import/export snapshots that pass through the redaction gate.
 
 ```text
 Device A local SQLite
-  -> export reviewed append log
-  -> private GitHub repo
+  -> export reviewed append-only events
+  -> GitHub repo
   -> Device B imports reviewed events
+  -> Device B updates local SQLite
+```
+
+This gives serverless sharing without giving up fast local recall:
+
+```text
+serverless GitHub mode = local SQLite on every device + GitHub event/wiki/metadata sync
+hub mode               = shared live MEMENTO hub + clients
+local mode             = one local SQLite/MEMENTO store
 ```
 
 ### Google Drive
