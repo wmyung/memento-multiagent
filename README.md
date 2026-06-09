@@ -61,6 +61,7 @@ Local-only mode is enough when all agents run on one machine. If agents run acro
 | **Local** | one laptop/desktop runs all agents | all memory stays in one local MEMENTO store | simplest and safest |
 | **Hub** | agents run on several machines and need shared live memory | one always-on machine hosts the shared MEMENTO store and web UI; clients connect over SSH, Tailscale, HTTP, or MCP | best live sharing, requires one reachable host |
 | **GitHub async sync** | you want portable, auditable, multi-machine sharing without running a server | wiki pages, sanitized decisions, skill metadata, and append-only memory logs sync through a private GitHub repo | great for history/review, not ideal for live SQLite writes |
+| **Supabase managed hub** | you want multi-device sharing without operating your own VM/server | Supabase stores reviewed events, decisions, skills, cleanup queues, and audit logs; devices keep local SQLite for recall | managed realtime backend, requires cloud account and strict RLS |
 | **File-drive sync** | a team already lives in a shared drive | selected exports sync through a provider such as Google Drive | convenient for humans, more conflict-prone for agent writes |
 
 Recommended default:
@@ -69,6 +70,7 @@ Recommended default:
 single machine     -> Local mode
 multiple machines  -> Hub mode over Tailscale/SSH
 portable history   -> GitHub async sync
+managed realtime   -> Supabase managed hub
 human file sharing -> Google Drive export only, not the primary memory backend
 ```
 
@@ -126,6 +128,68 @@ hub mode               = shared live MEMENTO hub + clients
 local mode             = one local SQLite/MEMENTO store
 ```
 
+### Supabase Managed Hub
+
+Supabase can be used as an optional managed hub when you want multi-device or team sharing without operating a VM.
+
+Supabase mode does **not** replace local SQLite. Each device still keeps local SQLite for fast recall. Supabase stores shared, reviewed, append-only control data:
+
+- memory events;
+- decisions;
+- skill metadata;
+- cleanup queue;
+- privacy review queue;
+- sync status;
+- audit log.
+
+Recommended shape:
+
+```text
+Device A local SQLite
+Device B local SQLite
+Device C local SQLite
+        |
+        v
+Supabase managed hub
+  memory_events
+  decisions
+  skills
+  cleanup_queue
+  privacy_review_queue
+  audit_log
+        |
+        v
+Each device imports approved events
+and updates local SQLite
+```
+
+Supabase is a good fit for:
+
+- near-realtime memory event sharing;
+- browser UI auth;
+- row-level security;
+- review queues;
+- audit tables;
+- team access control.
+
+Supabase should not store raw secrets or raw local databases:
+
+- no raw `memory.sqlite3`;
+- no OAuth tokens;
+- no API keys or cookies;
+- no SSH private keys;
+- no local browser/session state;
+- no full transcripts by default.
+
+Recommended role:
+
+```text
+Supabase = optional managed realtime hub
+SQLite   = fast local recall on every device
+Wiki     = durable markdown knowledge
+GitHub   = optional source-controlled async sync
+```
+
 ### Google Drive
 
 Google Drive can be useful for human-facing exports, PDFs, docs, and shared review folders. It is less attractive as the core memory sync backend.
@@ -142,6 +206,7 @@ Recommended role:
 
 ```text
 Google Drive = optional export/review target
+Supabase     = optional managed realtime hub
 GitHub       = optional async source-controlled sync
 Hub          = live shared memory
 Local        = safest default
@@ -393,6 +458,7 @@ Default stance: **nothing leaves the machine unless the user turns it on.**
 | Web bind address | `127.0.0.1` |
 | Remote API | Off |
 | GitHub sync | Off |
+| Supabase sync | Off |
 | Telemetry | None |
 | Public export | Off |
 | Wiki write | Human approval |
@@ -435,6 +501,8 @@ The MVP is intentionally small:
 - no mandatory cloud service;
 - custom PEP 517 build backend with no build dependencies.
 
+Cloud integrations such as Supabase should be optional extras, not required runtime dependencies.
+
 MEMENTO core remains dependency-light. `memento-multiagent` is an optional operating layer around it.
 
 ## Comparison
@@ -470,6 +538,7 @@ Next layers:
 - redaction gate;
 - skill registry detail pages;
 - GitHub export preview;
+- optional Supabase managed hub backend;
 - richer adapter implementations for Codex, Claude, Hermes, OpenClaude-style agents, and MCP clients.
 
 ## GitHub Topics
@@ -477,5 +546,5 @@ Next layers:
 Recommended repository topics:
 
 ```text
-ai-agents, agent-memory, multi-agent, memento, codex, claude, hermes, openclaude, sqlite, wikillm, local-first, agent-skills, memory-cleanup, privacy
+ai-agents, agent-memory, multi-agent, memento, codex, claude, hermes, openclaude, sqlite, wikillm, supabase, local-first, agent-skills, memory-cleanup, privacy
 ```
